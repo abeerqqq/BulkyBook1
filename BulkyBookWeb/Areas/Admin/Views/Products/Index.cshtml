@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Products List</h1>
+<br />
+
+<a class="btn btn-primary" asp-area="Admin" asp-controller="Products" asp-action="Upsert"><i class="bi bi-plus"></i> &nbsp;Create New Product</a>
+<br />
+<br />
+<table class="table table-bordered table-striped" style="width=100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+
+    </thead>
+
+</table>
+
