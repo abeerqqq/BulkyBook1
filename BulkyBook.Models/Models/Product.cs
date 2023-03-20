@@ -17,6 +17,7 @@ namespace BulkyBook.Models.Models
         [Required]
         public string Title { get; set; }
         [Required]
+        [ValidateNever]
         public string ImageUrl { get; set; }
         public string Description { get; set; }
         [Required]
