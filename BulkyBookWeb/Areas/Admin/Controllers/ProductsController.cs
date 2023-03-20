@@ -89,7 +89,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                 }
                 _unitOfWork.Products.Add(obj.Product);
                 _unitOfWork.Save();
-                TempData["success"] = "Product Created Successfully!";
+                TempData["success"] = "Product Created Successfully!!";
                 return RedirectToAction("Index");
             }
             return View(obj);
