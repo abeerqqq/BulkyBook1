@@ -27,9 +27,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         //Get All
         public IActionResult Index()
         {
-
-            IEnumerable<Product> products = _unitOfWork.Products.GetAll();
-            return View(products);
+            return View();
         }
 
         public IActionResult Upsert(int? id)
@@ -123,5 +121,14 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             TempData["success"] = "Deleted Successfully!";
             return RedirectToAction("Index");
         }
+        #region API Calls
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var productsList = _unitOfWork.Products.GetAll();
+            return Json(new { data = productsList });
+
+        }
+        #endregion
     }
 }
