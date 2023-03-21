@@ -51,9 +51,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
              */
             if (id == null || id == 0)
             {
-                //To populate the retrived selected ListsITems
-                //ViewBag.CategoryList = CategoryList;
-                //ViewData["CoverTypeList"] = CoverTypesList;
+                
                 return View(productVM);
             }
             /*
