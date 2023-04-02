@@ -17,11 +17,11 @@ namespace BulkyBook.DataAccess.Repository.IRepository
         /*
          * GetFirstOrDefault return an Object of type T 
          */
-        T GetFirstOrDefault(Expression<Func<T, bool>> filter);
+        T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperties = null);
         /*
          * GetAll return a list of type T
          */
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll(string? includeProperties = null);
         /*
         * Add return Nothing but add an object of type T
         */

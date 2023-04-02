@@ -59,9 +59,9 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             */
             else
             {
-
+                return View(productVM);
             }
-            return View();
+            
         }
 
         [HttpPost]
@@ -123,7 +123,7 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var productsList = _unitOfWork.Products.GetAll();
+            var productsList = _unitOfWork.Products.GetAll(includeProperties: "Category,CoverType");
             return Json(new { data = productsList });
 
         }
