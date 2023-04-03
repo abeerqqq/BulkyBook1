@@ -81,6 +81,8 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
                    /*If we are updating a product we have to delete the old image and add a new one in the images/products folder
                     * 1. Check if there's an imageURL in the DB
                     * 2. Get the Image Path
+                    * 3. Check if Image exists
+                    * 4. Delete the image
                     */
                     if (obj.Product.ImageUrl != null) {
                         

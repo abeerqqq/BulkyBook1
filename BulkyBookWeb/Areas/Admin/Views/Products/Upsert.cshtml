@@ -11,17 +11,23 @@
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <!--The hidden fields are controls that allow us to store data or information on a page without displaying it
+        If we didn't use it Id will be always 0.. it is not posted'
+        And we do not have input for image url also
+    .-->
     <input asp-for="Product.Id" hidden />
     <input asp-for="Product.ImageUrl" hidden />
 
-    <div class="border p-3 mt-4 row">
+    <div class="row">
+        <div class="col-10">
+             <div class="border p-3 mt-4 row">
 
-        <div class="col-12 >
-            <h4 class="text-primary">@(Model.Product.Id!=0?"Update":"Create" ) Product</h4>
+        <div class="col-12 pb-2>
+            <h4 class="text-primary"> @(Model.Product.Id!=0? "Update":"Create" ) Product</h4>
             <hr />
         </div>
 
-        <input type="hidden" asp-for="Product.Id" />
+        
 
         <div class="mb-3">
             <label asp-for="Product.Title" class="control-label"></label>
@@ -103,6 +109,13 @@
         </div>
 
     </div> 
+        </div>
+        <div class="col-2 pt-4">
+			<img src="@Model.Product.ImageUrl"
+			width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+		</div>
+    </div>
+   
 
 </form>
 
