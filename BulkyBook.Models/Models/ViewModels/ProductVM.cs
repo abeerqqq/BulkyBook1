@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace BulkyBook.Models.Models.ViewModels
 {
+    /*ViewModels are used to shape multiple entities from one or more models into a single object.
+     */
     public class ProductVM
     {
         public Product Product { get; set; }

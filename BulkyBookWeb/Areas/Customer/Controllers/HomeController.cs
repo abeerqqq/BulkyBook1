@@ -1,9 +1,9 @@
-﻿using BulkyBook.Models.Models.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models.Models;
 using BulkyBook.Models;
+using System.Globalization;
 
 namespace BulkyBookWeb.Areas.Customer.Controllers
 {
@@ -25,13 +25,18 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
             IEnumerable<Product> productList = _unitOfWork.Products.GetAll(includeProperties: "Category,CoverType");
             return View(productList);
         }
-
-        public IActionResult Details(int id) {
+        /*
+         * ShoppingCart This is a View Model 
+         *  ViewModels are used to shape multiple entities from one or more models into a single object.
+         */
+   
+        public IActionResult Details(int productId) {
 
             ShoppingCart cartObj = new()
             {
-                Product = _unitOfWork.Products.GetFirstOrDefault(u => u.Id == id, includeProperties: "Category,CoverType"),
-                Count = 1
+              //  ProductId = productId,
+                Product = _unitOfWork.Products.GetFirstOrDefault(u => u.Id == productId, includeProperties: "Category,CoverType"),
+                Count = 1,
             };
            return View(cartObj);
         }
