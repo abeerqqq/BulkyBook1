@@ -1,0 +1,92 @@
+﻿@model BulkyBook.Models.Models.Company
+
+@{
+    ViewData["Title"] = (Model.Id!=0? "Update Company":"Add New Compant");
+}
+
+<br /><br />
+
+<hr />
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form method="post" asp-action="Upsert" enctype="multipart/form-data">
+    <!--The hidden fields are controls that allow us to store data or information on a page 
+        without displaying it
+        If we didn't use it Id will be always 0.. it is not posted'
+        And we do not have input for image url also
+    .-->
+    <input asp-for="Id" hidden />
+    
+
+    <div class="row">
+        <div class="col-10">
+             <div class="border p-3 mt-4 row">
+
+        <div class="col-12 pb-2>
+            <h4 class="text-primary"> @(Model.Id!=0? "Update":"Add New" ) Company </h4>
+            <hr />
+        </div>
+
+        
+
+        <div class="mb-3">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="StreetAdress" class="control-label"></label>
+            <textarea asp-for="StreetAdress" rows="3" class="form-control"></textarea>
+            <span asp-validation-for="StreetAdress" class="text-danger"></span>
+        </div>
+                
+        <div class="mb-3 col-6">
+            <label asp-for="City" class="control-label"></label>
+            <input asp-for="City" class="form-control" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3  col-6">
+            <label asp-for="State" class="control-label"></label>
+            <input asp-for="State" class="form-control" />
+            <span asp-validation-for="State" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="PostalCode" class="control-label"></label>
+            <input asp-for="PostalCode" class="form-control" />
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 col-6">
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+
+
+        <div class="col-12">
+            @if(Model.Id!=0){
+                <input type="submit" value="Update" class="btn btn-primary" style="width:150px" />
+            }
+            else{
+                <input type="submit" onclick="InputValidation()" value="Add" class="btn btn-primary" style="width:150px" />
+            }
+            <a class="btn btn-secondary" asp-action="Index" style="width:150px">Back to List</a>
+        </div>
+
+    </div> 
+        </div>
+
+    </div>
+   
+
+</form>
+
+<!-- Client Side Validation -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"></partial>
+}
