@@ -17,7 +17,9 @@ using Microsoft.AspNetCore.Identity;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Identity.UI.Services;
+using BulkyBook.Utility;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,8 +34,17 @@ builder.Services.AddControllersWithViews(); // here we are adding a service to t
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders().AddDefaultUI()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.ConfigureApplicationCookie(
+options => {
+    options.LoginPath = $"/Identity/Pages/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Pages/Account/AccessDenaied";
+});
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

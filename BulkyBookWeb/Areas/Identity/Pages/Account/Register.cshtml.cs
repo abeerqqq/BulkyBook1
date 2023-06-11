@@ -10,14 +10,18 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using BulkyBook.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using BulkyBook.Models.Models;
 
 namespace BulkyBookWeb.Areas.Identity.Pages.Account
 {
@@ -29,6 +33,8 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        // New ??
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         // Constructor
         public RegisterModel(
@@ -36,6 +42,7 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
+            RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -44,8 +51,10 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _roleManager = roleManager;
         }
 
+        
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -56,7 +65,7 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        //Inner class
+        //Inner class for all the properties inside the register  view
         public class InputModel
         {
 
@@ -76,6 +85,7 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+           
 
             [Required]
             public string Name { get; set; }
@@ -84,16 +94,41 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             public string? State { get; set; }
             public string? PostalCode { get; set; }
             public string? PhoneNumber { get; set; }
+
+            public string? Role { get; set; }
+            // To add  a list of dropdown -> we can call it inside the register.cshtml
+            [ValidateNever]
+            public IEnumerable<SelectListItem> RoleList { get; set; }
         }
 
 
+        // This method invoked when we load the page 
+        // used to suspend all async methods
+        // enclosed until the point where the operations presented by the asynchronous method are completed.
         public async Task OnGetAsync(string returnUrl = null)
         {
+            // Check if the role not exist in the db -> Add it
+            if (!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult()) {
+
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
+            }
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-        }
+            Input = new InputModel()
+            {
+                // We are projecting the role name and we are putting it inside the select 
+                RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
+                })
+            };
+            }
 
-        //Create new user
+        //Invoked when inserting a new user
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -106,10 +141,25 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+                //if creating user is succssful !
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    //assign roles
+                    if (!String.IsNullOrEmpty(Input.Role))
+                    {
+                        // if the user selected a role
+                        /*We have two methods :
+                         AddToRoleAsync
+                         AddToRolesAsync -> user can have multiple roles
+                         */
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+
+                    }
+                    else {
+                        await _userManager.AddToRoleAsync(user, SD.Role_Customer);
+                    }
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -142,15 +192,15 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private ApplicationUser CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return Activator.CreateInstance<ApplicationUser>();
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
                     $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
