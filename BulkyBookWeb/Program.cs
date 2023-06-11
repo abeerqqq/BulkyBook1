@@ -38,7 +38,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProvid
 builder.Services.ConfigureApplicationCookie(
 options => {
     options.LoginPath = $"/Identity/Pages/Account/Login";
-    options.LogoutPath = $"/Identity/Account/Logout";
+    options.LogoutPath = $"/Identity/Pages/Account/Logout";
     options.AccessDeniedPath = $"/Identity/Pages/Account/AccessDenaied";
 });
 
