@@ -13,6 +13,8 @@ namespace BulkyBook.DataAccess.Repository.IRepository
         ICoverTypeRepository CoverType { get; }
         IProductRepository Products { get; }
         ICompanyRepository Company { get; }
+        IShoppingCartRepository ShoppingCart { get; }
+        IApplicationUserRepository ApplicationUser { get; }
         //Save is commin method for all repo make sense to pu it in the unit
         void Save();
     }

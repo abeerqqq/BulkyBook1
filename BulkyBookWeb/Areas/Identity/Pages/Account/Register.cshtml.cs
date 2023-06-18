@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using BulkyBook.Models.Models;
+using BulkyBook.DataAccess.Repository.IRepository;
 
 namespace BulkyBookWeb.Areas.Identity.Pages.Account
 {
@@ -35,9 +36,10 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         // New ??
         private readonly RoleManager<IdentityRole> _roleManager;
-
+        private readonly IUnitOfWork _unitOfWork;
         // Constructor
         public RegisterModel(
+            IUnitOfWork unitOfWork,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
@@ -45,6 +47,7 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender)
         {
+            _unitOfWork=unitOfWork;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
@@ -99,6 +102,9 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
             // To add  a list of dropdown -> we can call it inside the register.cshtml
             [ValidateNever]
             public IEnumerable<SelectListItem> RoleList { get; set; }
+            public int? CompanyId { get; set; }
+            [ValidateNever]
+            public IEnumerable<SelectListItem> CompanyList { get; set; }
         }
 
 
@@ -124,7 +130,12 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
                 {
                     Text = i,
                     Value = i
-                })
+                }),
+                CompanyList = _unitOfWork.Company.GetAll().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
             };
             }
 
@@ -139,6 +150,15 @@ namespace BulkyBookWeb.Areas.Identity.Pages.Account
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                //Add the other user attributes :
+                user.Name = Input.Name;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.City = Input.City;
+                user.StreetAdress = Input.StreetAdress;
+                user.State= Input.State;
+                user.PostalCode= Input.PostalCode;
+                user.CompanyId = Input.CompanyId;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 //if creating user is succssful !
