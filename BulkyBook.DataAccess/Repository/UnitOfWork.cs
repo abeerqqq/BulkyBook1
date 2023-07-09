@@ -9,7 +9,7 @@ namespace BulkyBook.DataAccess.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public ICategoryRepository Category { get; private set; }
+        public IOrderDetailsRepository Category { get; private set; }
         public ICoverTypeRepository CoverType { get; private set; }
         public IProductRepository Products { get; private set; }
 

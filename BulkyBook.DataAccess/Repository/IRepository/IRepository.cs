@@ -21,7 +21,7 @@ namespace BulkyBook.DataAccess.Repository.IRepository
         /*
          * GetAll return a list of type T
          */
-        IEnumerable<T> GetAll(string? includeProperties = null);
+        IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter=null,string? includeProperties = null);
         /*
         * Add return Nothing but add an object of type T
         */
