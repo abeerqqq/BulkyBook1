@@ -53,7 +53,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
 
             ShoppingCart shoppingCartFromDb = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.ApplicationUserId == userId &&
             u.ProductId == shoppingCartObj.ProductId);
-
+            //
             if(shoppingCartFromDb != null)
             {
                 shoppingCartFromDb.Count += 1;

@@ -26,6 +26,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
             shoppingCartVM = new ShoppingCartVM
             {
                 shoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includeProperties: "Product"),
+                orderHeader = new ()
 
             };
             // We cannot get the order total directly becasue of the Specal prices we have
@@ -51,7 +52,7 @@ namespace BulkyBookWeb.Areas.Customer.Controllers
             foreach(var item in shoppingCartVM.shoppingCartList)
             {
                 item.Price = GetPriceBasedOnQuantity(item);
-                shoppingCartVM.orderTotal += (item.Price * item.Count);
+                shoppingCartVM.orderHeader.OrderTotal += (item.Price * item.Count);
             }
 
 

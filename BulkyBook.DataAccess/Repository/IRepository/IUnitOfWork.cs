@@ -9,12 +9,15 @@ namespace BulkyBook.DataAccess.Repository.IRepository
     public interface IUnitOfWork
     {
         //Create all the repositories
-        IOrderDetailsRepository Category { get; }
+        ICategoryRepository Category { get; }
         ICoverTypeRepository CoverType { get; }
         IProductRepository Products { get; }
         ICompanyRepository Company { get; }
         IShoppingCartRepository ShoppingCart { get; }
         IApplicationUserRepository ApplicationUser { get; }
+        IOrderHeaderRepository OrderHeader { get; }
+        IOrderDetailsRepository OrderDetails { get; }
+
         //Save is commin method for all repo make sense to pu it in the unit
         void Save();
     }

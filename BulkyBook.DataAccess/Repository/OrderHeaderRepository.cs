@@ -20,7 +20,7 @@ namespace BulkyBook.DataAccess.Repository
         }
         public void Update(OrderHeader obj)
         {
-            _db.Update(obj);
+            _db.orderHeader.Update(obj);
         }
     }
 }

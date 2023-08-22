@@ -11,6 +11,10 @@ namespace BulkyBook.Models.Models
 {
     public class OrderDetails
     {
+        /*
+         * this model to identify what are the items in the order
+         * Count
+         */
         public int Id { get; set; }
         public int OrderHeaderId { get; set; }
         [ForeignKey("OrderHeaderId")]
